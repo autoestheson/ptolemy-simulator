@@ -71,13 +71,13 @@ function sex3(n) {
 /* HEAVENLY BODIES ************************************************************/
 
 class StaticObject {
+    next = false;
+    
     constructor(name, x, y) {
         this.name = name;
         
         this.x = x;
         this.y = y;
-        
-        this.children = [];
     }
     
     preFrame() {}
@@ -86,10 +86,13 @@ class StaticObject {
     
     advanceFrame() {
         this.preFrame();
+        
         drawCircle(this.x, this.y, height / 64, fg1);
         drawLabel(this.x + height / 64 + 2, this.y, 12, this.name);
-        for (const child of this.children)
-            child.advanceFrame();
+        
+        if (this.next != false)
+            this.next.advanceFrame();
+        
         this.postFrame();
     }
     
@@ -122,6 +125,7 @@ class OrbitingBody extends StaticObject {
     
     postFrame() {
         this.f = (this.f + this.v) % 360;
+        
         this.x = this.p.x + rf2x(this.r, this.f);
         this.y = this.p.y - rf2y(this.r, this.f);
     }
@@ -129,19 +133,20 @@ class OrbitingBody extends StaticObject {
 
 /* MAIN SECTION ***************************************************************/
 
-const cm1 = new StaticObject("α", width / 2, height / 2 + width / 18);
-cm1.children.push(new OrbitingBody("β", cm1, width / 3, bf.valueAsNumber, bv.valueAsNumber));
-cm1.children[0].children.push(new OrbitingBody("γ", cm1.children[0], width / 9, gf.valueAsNumber, gv.valueAsNumber));
-const cm2 = new StaticObject("δ", width / 2, height / 2 - width / 18);
-cm2.children.push(new OrbitingBody("ε", cm2, width / 3, ef.valueAsNumber, ev.valueAsNumber));
+var a = new StaticObject("α", width / 2, height / 2 + width / 18);
+var b = new OrbitingBody("β", a, width / 3, bf.valueAsNumber, bv.valueAsNumber);
+var g = new OrbitingBody("γ", b, width / 9, gf.valueAsNumber, gv.valueAsNumber);
+var d = new StaticObject("δ", width / 2, height / 2 - width / 18);
+var e = new OrbitingBody("ε", d, width / 3, ef.valueAsNumber, ev.valueAsNumber);
+a.next = b; b.next = g; d.next = e;
 
 function upva() {
-    cm1.children[0].f = bf.valueAsNumber;
-    cm1.children[0].v = bv.valueAsNumber;
-    cm1.children[0].children[0].f = gf.valueAsNumber;
-    cm1.children[0].children[0].v = gv.valueAsNumber;
-    cm2.children[0].f = ef.valueAsNumber;
-    cm2.children[0].v = ev.valueAsNumber;
+    b.f = bf.valueAsNumber;
+    b.v = bv.valueAsNumber;
+    g.f = gf.valueAsNumber;
+    g.v = gv.valueAsNumber;
+    e.f = ef.valueAsNumber;
+    e.v = ev.valueAsNumber;
 }
 
 function loop() {
@@ -149,16 +154,16 @@ function loop() {
     context.fillRect(0, 0, width, height);
     
     if (rm1.checked) {
-        cm1.advanceFrame();
-        cm1.children[0].renderGraph(0, cm1);
-        cm1.children[0].children[0].renderGraph(1, cm1.children[0]);
-        cm1.children[0].children[0].renderGraph(2, cm1);
+        a.advanceFrame();
+        b.renderGraph(0, a);
+        g.renderGraph(1, b);
+        g.renderGraph(2, a);
     }
     
     if (rm2.checked) {
-        cm2.advanceFrame();
-        cm2.children[0].renderGraph(4, cm2);
-        cm2.children[0].renderGraph(5, cm1);
+        d.advanceFrame();
+        e.renderGraph(4, d);
+        e.renderGraph(5, a);
     }
     
     requestAnimationFrame(loop);

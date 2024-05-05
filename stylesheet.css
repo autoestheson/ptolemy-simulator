@@ -1,3 +1,11 @@
 canvas {
     border: 1px inset #000;
 }
+
+table {
+    border: 1px outset #000;
+}
+
+th, td {
+    border: 1px inset #000;
+}
