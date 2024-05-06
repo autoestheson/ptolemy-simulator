@@ -2,10 +2,16 @@
 
 const canvas = document.querySelector("canvas");
 const context = canvas.getContext("2d");
+//const width = (canvas.width = window.innerWidth / 2);
+//const height = (canvas.height = window.innerWidth / 2);
 const width = canvas.width;
 const height = canvas.height;
+
 const rm1 = document.getElementById("rm1");
 const rm2 = document.getElementById("rm2");
+
+const wm = document.getElementById("wm");
+
 const ba = document.getElementById("bf");
 const bv = document.getElementById("bv");
 const ga = document.getElementById("gf");
@@ -84,7 +90,10 @@ class StaticObject {
     advanceFrame() {
         this.preFrame();
         
-        drawCircle(this.x, this.y, height / 64, this.color);
+        if (this.next != false)
+            drawCircle(this.x, this.y, height / 96, this.color);
+        else
+            drawCircle(this.x, this.y, height / 64, this.color);
         drawLabel(this.x + height / 64 + 2, this.y, 12, this.name);
         
         if (this.next != false)
@@ -114,13 +123,17 @@ class OrbitingBody extends StaticObject {
     
     preFrame() {
         drawCircle(this.p.x, this.p.y, this.r, this.ocolor);
-        if (!Object.is(this.p, a))
-            drawLine(this.p.x, this.p.y, this.x, this.y, this.lcolor1);
-        drawLine(a.x, a.y, this.x, this.y, this.lcolor2);
+        if (this.next == false) {
+            if (!Object.is(this.p, a))
+                drawLine(this.p.x, this.p.y, this.x, this.y, this.lcolor1);
+            drawLine(a.x, a.y, this.x, this.y, this.lcolor2);
+        } else {
+            drawLine(a.x, a.y, this.x, this.y, this.lcolor1);
+        }
     }
     
     renderGraph(i, p) {
-        drawLabel(2, i * 12 + 9, 27, `${this.name}:${p.name}`);
+        drawLabel(2, i * 12 + 9, 27, `${p.name}-${this.name}`);
         drawLabel(129, i * 12 + 9, width, sex3(p.observe(this)));
         fillBox(27, i * 12, 100, 12, this.lcolor1);
         fillBox(27, i * 12, p.observe(this) / 3.6, 12, this.lcolor2);
@@ -136,14 +149,14 @@ class OrbitingBody extends StaticObject {
 
 /* MAIN SECTION ***************************************************************/
 
-var a = new StaticObject("α", "#FFFF", width / 2, height / 2 + width / 18);
+var a = new StaticObject("α", "#FFF", width / 2, height / 2 + width / 18);
 
-var b = new OrbitingBody("β", "#FFFF", "#0FFA", "#F00A", "#FF0A", a, width / 3, bf.valueAsNumber, bv.valueAsNumber);
-var g = new OrbitingBody("γ", "#FFFF", "#0FFA", "#F00A", "#FF0A", b, width / 9, gf.valueAsNumber, gv.valueAsNumber);
+var b = new OrbitingBody("β", "#FFF", "#0FFA", "#F00A", "#FF0A", a, width / 3, bf.valueAsNumber, bv.valueAsNumber);
+var g = new OrbitingBody("γ", "#FFF", "#0FFA", "#F00A", "#FF0A", b, width / 9, gf.valueAsNumber, gv.valueAsNumber);
 b.next = g;
 
-var d = new StaticObject("δ", "#FFFF", width / 2, height / 2 - width / 18);
-var e = new OrbitingBody("ε", "#FFFF", "#0FFA", "#F00A", "#FF0A", d, width / 3, ef.valueAsNumber, ev.valueAsNumber);
+var d = new StaticObject("δ", "#FFF", width / 2, height / 2 - width / 18);
+var e = new OrbitingBody("ε", "#FFF", "#0FFA", "#F00A", "#FF0A", d, width / 3, ef.valueAsNumber, ev.valueAsNumber);
 d.next = e;
 
 function upva() {
@@ -156,7 +169,10 @@ function upva() {
 }
 
 function loop() {
-    context.fillStyle = "#000";
+    if (wm.checked)
+        context.fillStyle = "#00000001";
+    else
+        context.fillStyle = "#000";
     context.fillRect(0, 0, width, height);
     
     a.advanceFrame();

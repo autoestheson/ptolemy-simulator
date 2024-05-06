@@ -3,32 +3,34 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width"/>
-    <title>Ptolemy Simulator</title>
+    <title>Ptolemy </title>
     <link href="stylesheet.css" rel="stylesheet"/>
     <link href="icon.png" rel="icon"/>
 </head>
 <body>
-    <h1>Ptolemy Simulator</h1>
+    <h1>PTOLEMY SIMULATOR</h1>
     
     <canvas width="512" height="512"></canvas>
     
     <table>
-        <tr><td><input type="checkbox" id="rm1" checked></input></td><td><label for="rm1">Render Epicyclical Model</label></td></tr>
-        <tr><td><input type="checkbox" id="rm2" checked></input></td><td><label for="rm2">Render Eccentric Model</label></td></tr>
-    </table>
-    
-    <table>
-    <tr><th></th><th>Azimuth</th><th>Velocity</th>
-    <tr><th><label>β</label></th><td><input type="number" id="bf" min="-360" max="360" value="90"></input></td>
-                                 <td><input type="number" id="bv" min="-360" max="360" value="1"></input></td></tr>
-    <tr><th><label>γ</label></th><td><input type="number" id="gf" min="-360" max="360" value="90"></input></td>
-                                 <td><input type="number" id="gv" min="-360" max="360" value="0"></input></td></tr>
-    <tr><th><label>ε</label></th><td><input type="number" id="ef" min="-360" max="360" value="90"></input></td>
-                                 <td><input type="number" id="ev" min="-360" max="360" value="1"></input></td></tr>
+        <tr><th>Buttons</th><th>Knobs</th></tr>
+        <tr><td><table>
+            <tr><td><input type="checkbox" id="rm1" checked></input></td><td><label for="rm1">Epicyclical Hypothesis</label></td></tr>
+            <tr><td><input type="checkbox" id="rm2" checked></input></td><td><label for="rm2">Eccentric Hypothesis</label></td></tr>
+            <tr><td><input type="checkbox" id="wm"></input></td><td><label for="wm">Weird Mode</label></td></tr>
+        </table></td><td><table>
+            <tr><th></th><th>Azimuth (°)</th><th>Velocity</th></tr>
+            <tr><th><label>β</label></th><td><input type="number" id="bf" min="-360" max="360" value="90"></input></td>
+                                         <td><input type="number" id="bv" min="-360" max="360" value="1"></input></td></tr>
+            <tr><th><label>γ</label></th><td><input type="number" id="gf" min="-360" max="360" value="90"></input></td>
+                                         <td><input type="number" id="gv" min="-360" max="360" value="0"></input></td></tr>
+            <tr><th><label>ε</label></th><td><input type="number" id="ef" min="-360" max="360" value="45"></input></td>
+                                         <td><input type="number" id="ev" min="-360" max="360" value="1"></input></td></tr>
+        </table>
+        <input type="button" id="upva" value="Update Simulation!!!" onclick="upva()"></input>
+        </td></tr>
     </table>
     
     <script src="main.js"></script>
-    
-    <input type="button" id="upva" value="Set Values" onclick="upva()"></input>
 </body>
 </html>
