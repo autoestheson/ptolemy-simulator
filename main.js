@@ -10,14 +10,18 @@ const height = canvas.height;
 const rm1 = document.getElementById("rm1");
 const rm2 = document.getElementById("rm2");
 
+const dl = document.getElementById("dl");
+const pa = document.getElementById("pa");
+const pt = document.getElementById("pt");
+const am = document.getElementById("am");
 const wm = document.getElementById("wm");
 
 const ba = document.getElementById("bf");
 const bv = document.getElementById("bv");
-const ga = document.getElementById("gf");
-const gv = document.getElementById("gv");
-const ea = document.getElementById("ef");
-const ev = document.getElementById("ev");
+const sa = document.getElementById("sf");
+const sv = document.getElementById("sv");
+const ma = document.getElementById("mf");
+const mv = document.getElementById("mv");
 
 function drawLine(x1, y1, x2, y2, color) {
     context.beginPath();
@@ -27,17 +31,21 @@ function drawLine(x1, y1, x2, y2, color) {
     context.stroke();
 }
 
-function drawCircle(x, y, r, color) {
+function drawArc(x, y, r, s, e, color) {
     context.beginPath();
     context.strokeStyle = color;
-    context.arc(x, y, r, 0, 2 * Math.PI);
+    context.arc(x, y, r, s, e);
     context.stroke();
+}
+
+function drawCircle(x, y, r, color) {
+    drawArc(x, y, r, 0, 2 * Math.PI, color);
 }
 
 function drawLabel(x, y, w, label) {
     context.beginPath();
     context.strokeStyle = "rgb(255 255 255)";
-    context.font = "12px monospace, monospace";
+    context.font = "12px serif";
     context.strokeText(label, x, y, w);
 }
 
@@ -94,7 +102,9 @@ class StaticObject {
             drawCircle(this.x, this.y, height / 96, this.color);
         else
             drawCircle(this.x, this.y, height / 64, this.color);
-        drawLabel(this.x + height / 64 + 2, this.y, 12, this.name);
+        
+        if (dl.checked)
+            drawLabel(this.x + height / 64 + 2, this.y, 12, this.name);
         
         if (this.next != false)
             this.next.advanceFrame();
@@ -122,21 +132,29 @@ class OrbitingBody extends StaticObject {
     }
     
     preFrame() {
-        drawCircle(this.p.x, this.p.y, this.r, this.ocolor);
+        if (am.checked)
+            drawArc(this.p.x, this.p.y, this.r, -deg2rad(this.f), 0, this.ocolor);
+        else
+            drawCircle(this.p.x, this.p.y, this.r, this.ocolor);
+        
         if (this.next == false) {
-            if (!Object.is(this.p, a))
+            if (!Object.is(this.p, g))
                 drawLine(this.p.x, this.p.y, this.x, this.y, this.lcolor1);
-            drawLine(a.x, a.y, this.x, this.y, this.lcolor2);
+            if (pa.checked)
+                drawArc(g.x, g.y, this.r / 2, -deg2rad(g.observe(this)), 0, this.lcolor2);
+            drawLine(g.x, g.y, this.x, this.y, this.lcolor2);
         } else {
-            drawLine(a.x, a.y, this.x, this.y, this.lcolor1);
+            drawLine(g.x, g.y, this.x, this.y, this.lcolor1);
         }
     }
     
     renderGraph(i, p) {
-        drawLabel(2, i * 12 + 9, 27, `${p.name}-${this.name}`);
-        drawLabel(129, i * 12 + 9, width, sex3(p.observe(this)));
-        fillBox(27, i * 12, 100, 12, this.lcolor1);
-        fillBox(27, i * 12, p.observe(this) / 3.6, 12, this.lcolor2);
+        if (pt.checked) {
+            drawLabel(2, i * 12 + 9, 27, `${p.name}-${this.name}`);
+            drawLabel(129, i * 12 + 9, width, sex3(p.observe(this)));
+            fillBox(27, i * 12, 100, 12, this.lcolor1);
+            fillBox(27, i * 12, p.observe(this) / 3.6, 12, this.lcolor2);
+        }
     }
     
     postFrame() {
@@ -149,23 +167,23 @@ class OrbitingBody extends StaticObject {
 
 /* MAIN SECTION ***************************************************************/
 
-var a = new StaticObject("α", "#FFF", width / 2, height / 2 + width / 18);
+var g = new StaticObject("Γ", "#0F0", width / 2, height / 2 + width / 18);
 
-var b = new OrbitingBody("β", "#FFF", "#0FFA", "#F00A", "#FF0A", a, width / 3, bf.valueAsNumber, bv.valueAsNumber);
-var g = new OrbitingBody("γ", "#FFF", "#0FFA", "#F00A", "#FF0A", b, width / 9, gf.valueAsNumber, gv.valueAsNumber);
-b.next = g;
+var b = new OrbitingBody("Β", "#F00", "#0FFA", "#F00A", "#FF0A", g, width / 3, bf.valueAsNumber, bv.valueAsNumber);
+var s = new OrbitingBody("Σ", "#FF0", "#0FFA", "#F00A", "#FF0A", b, width / 9, sf.valueAsNumber, sv.valueAsNumber);
+b.next = s;
 
-var d = new StaticObject("δ", "#FFF", width / 2, height / 2 - width / 18);
-var e = new OrbitingBody("ε", "#FFF", "#0FFA", "#F00A", "#FF0A", d, width / 3, ef.valueAsNumber, ev.valueAsNumber);
-d.next = e;
+var a = new StaticObject("Α", "#F00", width / 2, height / 2 - width / 18);
+var m = new OrbitingBody("Ϻ", "#FF0", "#0FFA", "#F00A", "#FF0A", a, width / 3, mf.valueAsNumber, mv.valueAsNumber);
+a.next = m;
 
 function upva() {
     b.f = bf.valueAsNumber;
     b.v = bv.valueAsNumber;
-    g.f = gf.valueAsNumber;
-    g.v = gv.valueAsNumber;
-    e.f = ef.valueAsNumber;
-    e.v = ev.valueAsNumber;
+    s.f = sf.valueAsNumber;
+    s.v = sv.valueAsNumber;
+    m.f = mf.valueAsNumber;
+    m.v = mv.valueAsNumber;
 }
 
 function loop() {
@@ -175,19 +193,19 @@ function loop() {
         context.fillStyle = "#000";
     context.fillRect(0, 0, width, height);
     
-    a.advanceFrame();
+    g.advanceFrame();
     
     if (rm1.checked) {
         b.advanceFrame();
-        b.renderGraph(0, a);
-        g.renderGraph(1, b);
-        g.renderGraph(2, a);
+        b.renderGraph(0, g);
+        s.renderGraph(1, b);
+        s.renderGraph(2, g);
     }
     
     if (rm2.checked) {
-        d.advanceFrame();
-        e.renderGraph(4, d);
-        e.renderGraph(5, a);
+        a.advanceFrame();
+        m.renderGraph(4, a);
+        m.renderGraph(5, g);
     }
     
     requestAnimationFrame(loop);
