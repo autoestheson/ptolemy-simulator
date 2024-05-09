@@ -11,9 +11,14 @@ const rm1 = document.getElementById("rm1");
 const rm2 = document.getElementById("rm2");
 
 const dl = document.getElementById("dl");
+const dg = document.getElementById("dg");
+const ao = document.getElementById("ao");
+const oo = document.getElementById("oo");
 const pa = document.getElementById("pa");
 const pt = document.getElementById("pt");
+const cm = document.getElementById("cm");
 const am = document.getElementById("am");
+const cg = document.getElementById("cg");
 const wm = document.getElementById("wm");
 
 const ba = document.getElementById("bf");
@@ -118,7 +123,7 @@ class StaticObject {
 }
 
 class OrbitingBody extends StaticObject {
-    constructor(name, color, ocolor, lcolor1, lcolor2, p, r, f, v) {
+    constructor(name, color, ocolor, lcolor1, lcolor2, p, r, ro, f, v) {
         super(name, color, p.x + rf2x(r, f), p.y + rf2y(r, f));
         
         this.ocolor = ocolor;
@@ -127,23 +132,26 @@ class OrbitingBody extends StaticObject {
         
         this.p = p;
         this.r = r;
+        this.ro = ro;
         this.f = f;
         this.v = v;
     }
     
     preFrame() {
-        if (am.checked)
-            drawArc(this.p.x, this.p.y, this.r, -deg2rad(this.f), 0, this.ocolor);
-        else
+        if (cm.checked)
             drawCircle(this.p.x, this.p.y, this.r, this.ocolor);
+        else if (am.checked)
+            drawArc(this.p.x, this.p.y, this.r, -deg2rad(this.f), 0, this.ocolor);
+        else if (cg.checked) {}
         
         if (this.next == false) {
-            if (!Object.is(this.p, g))
+            if (ao.checked && !Object.is(this.p, g))
                 drawLine(this.p.x, this.p.y, this.x, this.y, this.lcolor1);
             if (pa.checked)
-                drawArc(g.x, g.y, this.r / 2, -deg2rad(g.observe(this)), 0, this.lcolor2);
-            drawLine(g.x, g.y, this.x, this.y, this.lcolor2);
-        } else {
+                drawArc(g.x, g.y, this.ro, -deg2rad(g.observe(this)), 0, this.lcolor2);
+            if (oo.checked)
+                drawLine(g.x, g.y, this.x, this.y, this.lcolor2);
+        } else if (ao.checked) {
             drawLine(g.x, g.y, this.x, this.y, this.lcolor1);
         }
     }
@@ -167,15 +175,27 @@ class OrbitingBody extends StaticObject {
 
 /* MAIN SECTION ***************************************************************/
 
-var g = new StaticObject("Γ", "#0F0", width / 2, height / 2 + width / 18);
+var g = new StaticObject("Γ", "#0F0", width / 2, height / 2);
 
-var b = new OrbitingBody("Β", "#F00", "#0FFA", "#F00A", "#FF0A", g, width / 3, bf.valueAsNumber, bv.valueAsNumber);
-var s = new OrbitingBody("Σ", "#FF0", "#0FFA", "#F00A", "#FF0A", b, width / 9, sf.valueAsNumber, sv.valueAsNumber);
+var b = new OrbitingBody("Β", "#F00", "#0FFA", "#F00A", "#FF0A", g, width / 3, 0, bf.valueAsNumber, bv.valueAsNumber);
+var s = new OrbitingBody("Σ", "#FF0", "#0FFA", "#F00A", "#FF0A", b, width / 18, width / 6, sf.valueAsNumber, sv.valueAsNumber);
 b.next = s;
 
-var a = new StaticObject("Α", "#F00", width / 2, height / 2 - width / 18);
-var m = new OrbitingBody("Ϻ", "#FF0", "#0FFA", "#F00A", "#FF0A", a, width / 3, mf.valueAsNumber, mv.valueAsNumber);
+var a = new StaticObject("Α", "#F00", width / 2, height / 2 - height / 18);
+var m = new OrbitingBody("Ϻ", "#FF0", "#0FFA", "#F00A", "#FF0A", a, width / 3, width / 9, mf.valueAsNumber, mv.valueAsNumber);
 a.next = m;
+
+function drawScene(bg, fg) {
+    fillBox(0, 0, width, height, bg);
+    if (dg.checked) {
+        drawLine(width / 2, height / 32, width / 2, height - height / 32, fg);
+        drawLabel(width / 2 + 6, height / 32 + 9, 27, "90");
+        drawLabel(width / 2 + 6, height - height / 32, 27, "270");
+        drawLine(width / 32, height / 2, width - width / 32, height / 2, fg);
+        drawLabel(width / 32, height / 2 - 6, 27, "180");
+        drawLabel(width - width / 32 - 6, height / 2 - 6, 27, "0");
+    }
+}
 
 function upva() {
     b.f = bf.valueAsNumber;
@@ -188,10 +208,9 @@ function upva() {
 
 function loop() {
     if (wm.checked)
-        context.fillStyle = "#00000001";
+        drawScene("#00000001", "#FFF");
     else
-        context.fillStyle = "#000";
-    context.fillRect(0, 0, width, height);
+        drawScene("#000", "#FFF");
     
     g.advanceFrame();
     
