@@ -2,10 +2,8 @@
 
 const canvas = document.querySelector("canvas");
 const context = canvas.getContext("2d");
-//const width = (canvas.width = window.innerWidth / 2);
-//const height = (canvas.height = window.innerWidth / 2);
-const width = canvas.width;
-const height = canvas.height;
+const width = (canvas.width = 512);
+const height = (canvas.height = 512);
 
 const rm1 = document.getElementById("rm1");
 const rm2 = document.getElementById("rm2");
@@ -21,12 +19,19 @@ const am = document.getElementById("am");
 const cg = document.getElementById("cg");
 const wm = document.getElementById("wm");
 
+const br = document.getElementById("br");
 const ba = document.getElementById("bf");
 const bv = document.getElementById("bv");
+const sr = document.getElementById("sr");
 const sa = document.getElementById("sf");
 const sv = document.getElementById("sv");
+const mr = document.getElementById("mr");
 const ma = document.getElementById("mf");
 const mv = document.getElementById("mv");
+const gx = document.getElementById("gx");
+const gy = document.getElementById("gy");
+const ax = document.getElementById("ax");
+const ay = document.getElementById("ay");
 
 function drawLine(x1, y1, x2, y2, color) {
     context.beginPath();
@@ -104,12 +109,12 @@ class StaticObject {
         this.preFrame();
         
         if (this.next != false)
-            drawCircle(this.x, this.y, height / 96, this.color);
+            drawCircle(this.x, this.y, 4, this.color);
         else
-            drawCircle(this.x, this.y, height / 64, this.color);
+            drawCircle(this.x, this.y, 8, this.color);
         
         if (dl.checked)
-            drawLabel(this.x + height / 64 + 2, this.y, 12, this.name);
+            drawLabel(this.x + 8 + 2, this.y, 12, this.name);
         
         if (this.next != false)
             this.next.advanceFrame();
@@ -175,36 +180,44 @@ class OrbitingBody extends StaticObject {
 
 /* MAIN SECTION ***************************************************************/
 
-var g = new StaticObject("Γ", "#0F0", width / 2, height / 2);
+var g = new StaticObject("Γ", "#0F0", gx.valueAsNumber, gy.valueAsNumber);
 
-var b = new OrbitingBody("Β", "#F00", "#0FFA", "#F00A", "#FF0A", g, width / 3, 0, bf.valueAsNumber, bv.valueAsNumber);
-var s = new OrbitingBody("Σ", "#FF0", "#0FFA", "#F00A", "#FF0A", b, width / 18, width / 6, sf.valueAsNumber, sv.valueAsNumber);
+var b = new OrbitingBody("Β", "#F00", "#0FFA", "#F00A", "#FF0A", g, br.valueAsNumber, 0, bf.valueAsNumber, bv.valueAsNumber);
+var s = new OrbitingBody("Σ", "#FF0", "#0FFA", "#F00A", "#FF0A", b, sr.valueAsNumber, 72, sf.valueAsNumber, sv.valueAsNumber);
 b.next = s;
 
-var a = new StaticObject("Α", "#F00", width / 2, height / 2 - height / 18);
-var m = new OrbitingBody("Ϻ", "#FF0", "#0FFA", "#F00A", "#FF0A", a, width / 3, width / 9, mf.valueAsNumber, mv.valueAsNumber);
+var a = new StaticObject("Α", "#F00", ax.valueAsNumber, ay.valueAsNumber);
+var m = new OrbitingBody("M", "#FF0", "#0FFA", "#F00A", "#FF0A", a, mr.valueAsNumber, 64, mf.valueAsNumber, mv.valueAsNumber);
 a.next = m;
 
 function drawScene(bg, fg) {
     fillBox(0, 0, width, height, bg);
     
     if (dg.checked) {
-        drawLine(width / 2, height / 32, width / 2, height - height / 32, fg);
-        drawLabel(width / 2 + 6, height / 32 + 9, 27, "90");
-        drawLabel(width / 2 + 6, height - height / 32, 27, "270");
-        drawLine(width / 32, height / 2, width - width / 32, height / 2, fg);
-        drawLabel(width / 32, height / 2 - 6, 27, "180");
-        drawLabel(width - width / 32 - 6, height / 2 - 6, 27, "0");
+        drawLine(256, 16, 256, 496, fg);
+        drawLabel(256 + 6, 16 + 9, 27, "90");
+        drawLabel(256 + 6, 496, 27, "270");
+        drawLine(16, 256, 496, 256, fg);
+        drawLabel(16, 256 - 6, 27, "180");
+        drawLabel(496 - 6, 256 - 6, 27, "0");
     }
 }
 
 function upva() {
+    b.r = br.valueAsNumber;
     b.f = bf.valueAsNumber;
     b.v = bv.valueAsNumber;
+    s.r = sr.valueAsNumber;
     s.f = sf.valueAsNumber;
     s.v = sv.valueAsNumber;
+    m.r = mr.valueAsNumber;
     m.f = mf.valueAsNumber;
     m.v = mv.valueAsNumber;
+    
+    g.x = gx.valueAsNumber;
+    g.y = gy.valueAsNumber;
+    a.x = ax.valueAsNumber;
+    a.y = ay.valueAsNumber;
 }
 
 function loop() {

@@ -27,12 +27,35 @@
 <tr><td><input type="radio" name="cm" id="cg"></input></td><td><label for="cg">Circles are Gone</label></td></tr>
 <tr><td><input type="checkbox" id="wm"></input></td><td><label for="wm">Trail Mode</label></td></tr>
 </table></td><td><table>
-<tr><th></th><th>Azimuth</th><th>Velocity</th></tr>
-<tr><th><label>B</label></th><td><input type="number" id="bf" min="-360" max="360" value="90"></input></td><td><input type="number" id="bv" min="-360" max="360" value="1"></input></td></tr>
-<tr><th><label>S</label></th><td><input type="number" id="sf" min="-360" max="360" value="90"></input></td><td><input type="number" id="sv" min="-360" max="360" value="0"></input></td></tr>
-<tr><th><label>M</label></th><td><input type="number" id="mf" min="-360" max="360" value="45"></input></td><td><input type="number" id="mv" min="-360" max="360" value="1"></input></td></tr>
+<tr><th></th>
+    <th>Radius</th>
+    <th>Azimuth</th>
+    <th>Velocity</th></tr>
+<tr><th><label>Β</label></th>
+    <td><input type="number" id="br" min="0" max="512" value="170"></input></td>
+    <td><input type="number" id="bf" min="-360" max="360" value="90"></input></td>
+    <td><input type="number" id="bv" min="-360" max="360" value="1"></input></td></tr>
+<tr><th><label>Σ</label></th>
+    <td><input type="number" id="sr" min="0" max="512" value="32"></input></td>
+    <td><input type="number" id="sf" min="-360" max="360" value="90"></input></td>
+    <td><input type="number" id="sv" min="-360" max="360" value="0"></input></td></tr>
+<tr><th><label>M</label></th>
+    <td><input type="number" id="mr" min="0" max="512" value="170"></input></td>
+    <td><input type="number" id="mf" min="-360" max="360" value="45"></input></td>
+    <td><input type="number" id="mv" min="-360" max="360" value="1"></input></td></tr>
 </table>
-<input type="button" id="upva" value="Update Simulation!" onclick="upva()"></input>
+<table>
+<tr><th></th>
+    <th>X</th>
+    <th>Y</th>
+<tr><th><label>Γ</label></th>
+    <td><input type="number" id="gx" min="0" max="512" value="256"></input></td>
+    <td><input type="number" id="gy" min="0" max="512" value="256"></input></td></tr>
+<tr><th><label>Α</label></th>
+    <td><input type="number" id="ax" min="0" max="512" value="256"></input></td>
+    <td><input type="number" id="ay" min="0" max="512" value="224"></input></td></tr>
+</table>
+<input type="button" id="upva" value="Update Simulation" onclick="upva()"></input>
 </td></tr>
 </table></td></tr>
 </table>
