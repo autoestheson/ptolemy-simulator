@@ -187,6 +187,7 @@ a.next = m;
 
 function drawScene(bg, fg) {
     fillBox(0, 0, width, height, bg);
+    
     if (dg.checked) {
         drawLine(width / 2, height / 32, width / 2, height - height / 32, fg);
         drawLabel(width / 2 + 6, height / 32 + 9, 27, "90");
