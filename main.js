@@ -5,6 +5,17 @@ const context = canvas.getContext("2d");
 const width = (canvas.width = 512);
 const height = (canvas.height = 512);
 
+const pbg = document.getElementById("pbg");
+const tbg = document.getElementById("tbg");
+const psb = document.getElementById("psb");
+const tsb = document.getElementById("tsb");
+const psg = document.getElementById("psg");
+const tsg = document.getElementById("tsg");
+const pma = document.getElementById("pma");
+const tma = document.getElementById("tma");
+const pmg = document.getElementById("pmg");
+const tmg = document.getElementById("tmg");
+
 const rm1 = document.getElementById("rm1");
 const rm2 = document.getElementById("rm2");
 
@@ -80,8 +91,8 @@ function deg2rad(n) {return n / (180 / Math.PI)}
 function sexi(i, s, n) {
     var m = Math.floor(n);
     if (i == 0)
-        return m.toString().padStart(3, ' ');
-    return m.toString().padStart(3, ' ') + s + sexi(i - 1, ",", (n - m) * 60);
+        return m.toString().padStart(3, '0');
+    return m.toString().padStart(3, '0') + s + sexi(i - 1, ",", (n - m) * 60);
 }
 
 function sex3(n) {
@@ -161,15 +172,6 @@ class OrbitingBody extends StaticObject {
         }
     }
     
-    renderGraph(i, p) {
-        if (pt.checked) {
-            drawLabel(2, i * 12 + 9, 27, `${p.name}-${this.name}`);
-            drawLabel(129, i * 12 + 9, width, sex3(p.observe(this)));
-            fillBox(27, i * 12, 100, 12, this.lcolor1);
-            fillBox(27, i * 12, p.observe(this) / 3.6, 12, this.lcolor2);
-        }
-    }
-    
     postFrame() {
         this.f = (this.f + this.v) % 360;
         
@@ -195,11 +197,11 @@ function drawScene(bg, fg) {
     
     if (dg.checked) {
         drawLine(256, 16, 256, 496, fg);
-        drawLabel(256 + 6, 16 + 9, 27, "90");
-        drawLabel(256 + 6, 496, 27, "270");
+        drawLabel(256 + 6, 16 + 9, 36, "90");
+        drawLabel(256 + 6, 496, 36, "270");
         drawLine(16, 256, 496, 256, fg);
-        drawLabel(16, 256 - 6, 27, "180");
-        drawLabel(496 - 6, 256 - 6, 27, "0");
+        drawLabel(16, 256 - 6, 36, "180");
+        drawLabel(496 - 6, 256 - 6, 36, "0");
     }
 }
 
@@ -230,15 +232,20 @@ function loop() {
     
     if (rm1.checked) {
         b.advanceFrame();
-        b.renderGraph(0, g);
-        s.renderGraph(1, b);
-        s.renderGraph(2, g);
+        pbg.value = g.observe(b);
+        tbg.textContent = sex3(g.observe(b));
+        psb.value = b.observe(s);
+        tsb.textContent = sex3(b.observe(s));
+        psg.value = g.observe(s);
+        tsg.textContent = sex3(g.observe(s));
     }
     
     if (rm2.checked) {
         a.advanceFrame();
-        m.renderGraph(4, a);
-        m.renderGraph(5, g);
+        pma.value = a.observe(m);
+        tma.textContent = sex3(a.observe(m));
+        pmg.value = g.observe(m);
+        tmg.textContent = sex3(g.observe(m));
     }
     
     requestAnimationFrame(loop);

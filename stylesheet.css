@@ -7,5 +7,6 @@ table {
 }
 
 th, td {
+    font-family: monospace, monospace;
     border: 1px inset #000;
 }
